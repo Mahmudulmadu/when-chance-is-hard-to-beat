@@ -1,0 +1,16 @@
+numpy
+pandas
+matplotlib
+scipy
+scikit-learn
+jupyter
+ipykernel
+requests
+gdown
+
+# Deep baseline for notebook 28 (WDCNN-class 1D-CNN under the permutation null).
+# CPU build -- this project has no GPU and the models are small. Installed with:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+# Plain `pip install torch` pulls the ~2.5 GB CUDA wheel on Linux; the CPU
+# wheel is 124 MB and is what the reported results were produced on.
+torch==2.14.0+cpu
