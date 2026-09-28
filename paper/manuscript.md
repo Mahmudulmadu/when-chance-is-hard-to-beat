@@ -1,7 +1,7 @@
 # When chance is hard to beat: exact permutation nulls and degenerate baselines for bearing fault diagnosis and remaining useful life
 
 **Md. Mahmudul Hasan**  
-Independent Researcher · mahmudulmadu@gmail.com
+Independent Researcher, Dhaka, Bangladesh · mahmudulmadu@gmail.com
 
 ---
 
