@@ -317,7 +317,7 @@ Both datasets are public [1, 2]. All results are produced by build scripts in `s
 
 **Data and code availability.** Both datasets are public [1, 2]; all code is available as described above.
 
-**Declaration of generative AI and AI-assisted technologies in the writing process.** During the preparation of this work the author used generative AI tools, including Claude (Anthropic), for language editing, drafting assistance, programming assistance, and discussion of methodological and interpretive questions. The author directed the research, made all research decisions, reviewed and verified all code, analyses and reported results, and takes full responsibility for the accuracy and integrity of the content of the publication. Every result reported here is reproducible from the public code repository.
+**Declaration of generative AI and AI-assisted technologies in the manuscript preparation process.** During the preparation of this work, the author used Claude (Anthropic) for language editing, drafting assistance, programming assistance, and discussion of methodological and interpretive questions. The author independently directed the research and made the final research decisions, and all AI-assisted outputs, code, analyses, interpretations, and reported results were reviewed and verified by the author. The author takes full responsibility for the accuracy and integrity of the published work.
 
 ## References
 

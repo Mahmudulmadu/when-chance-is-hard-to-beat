@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """The results registry -- notebook 29.
 
-Paper A's argument is that a number in this field is not evidence until it has
+The paper's argument is that a number in this field is not evidence until it has
 been priced against something: a permuted-label null, a degenerate baseline, or
 chance. This applies that rule to the project's own numbers and writes them to
 one table, `results/registry.csv`, so every claim the paper makes can be read
@@ -170,9 +170,8 @@ add("nb15", "XJTU-SY", 11, "confidence separating a wrong in-scope call from a r
     note=f"the question that does have an answer; {wc.loc[~wc.pooling.str.startswith('80'), 'auroc'].iloc[0]:.3f} "
          f"if every snapshot is pooled, where three bearings supply 71 % of them")
 
-# ---- the six claims that used to be quoted. Phase 2 of docs/submission-checklist.md had
-# nb13, nb17, nb20, nb21 and nb25 write their intermediates out, so they are recomputed here
-# like everything else and Limitation 6 is gone.
+# ---- six claims whose intermediates nb13, nb17, nb20, nb21 and nb25 write out, so they are
+# recomputed here like everything else rather than transcribed
 det = pd.read_csv(P / "xjtu_detection_own_vs_pooled.csv")
 add("nb13", "XJTU-SY", len(det), "faults detected, per-unit healthy baseline",
     f"{int(det['own'].notna().sum())} of {len(det)}", "a pooled 14-unit fleet baseline",

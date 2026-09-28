@@ -23,7 +23,7 @@ damage-creation methods for artificial; several real units for real), so a
 train/test split can hold out *bearings*, not just recordings, and the
 artificial->real gap gets error bars instead of a single number.
 
-The artificial-vs-real distinction matters for RQ4 (sim-to-real gap):
+The artificial-vs-real distinction matters (the sim-to-real gap):
 artificial damage is the physical analogue of our simulated faults, real
 damage is the deployment target.
 

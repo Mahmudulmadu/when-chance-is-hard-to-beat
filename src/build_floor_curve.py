@@ -4,7 +4,7 @@
 Notebooks 22-25 priced how far this project's *attribution* numbers travel: an
 exact permutation null (nb22), a unit-count power curve on each rig (nb23, nb24),
 and a reliability layer whose honest interval turned out to be [0 %, 100 %]
-(nb25). The one positive RQ1 result -- **RUL reported as a floor** -- has never
+(nb25). The one positive remaining-life result -- **RUL reported as a floor** -- has never
 been through any of it.
 
 Two standing open items ask for the same measurement. Notebook 16's is a RUL

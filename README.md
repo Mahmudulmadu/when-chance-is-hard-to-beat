@@ -25,11 +25,11 @@ paper/
 results/
   registry.csv           every claim in the paper beside its comparator; all recomputed from cache
 src/
-  download_*.py          fetch the public datasets
+  download_*.py          fetch the two public datasets
   build_*.py             feature builders and every analysis the paper reports
   verify_references.py   checks each reference against Crossref / arXiv
 notebooks/
-  01-29                  the measurement notebooks, in the order the work was done
+  11-29                  the measurement notebooks behind the paper, in the order the work was done
 ```
 
 ## Reproducing the results
@@ -51,6 +51,7 @@ pip install -r requirements.txt --extra-index-url https://download.pytorch.org/w
 ## Not included
 
 - **The datasets and derived caches**, which are public and rebuilt by the scripts above.
+- **Earlier exploratory notebooks (01-10).** Dataset loading and a first artificial-to-real transfer study, which led to this work but carry no result it reports. One comparison cell at the end of notebook 11 reads a cache they produce; no number in the paper depends on it.
 - **Follow-up work.** A later notebook on document retrieval over the rigs' documentation, and the scripts behind it, belong to a separate paper; they are referred to in one or two notebooks here and are not needed for any result in this one.
 
 ## Licence
