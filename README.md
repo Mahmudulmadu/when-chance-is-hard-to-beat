@@ -9,12 +9,12 @@ The manuscript is in [`paper/manuscript.md`](paper/manuscript.md).
 
 ## What the paper shows
 
-Bearing fault diagnosis and remaining-useful-life (RUL) prediction are evaluated almost entirely on a few public datasets with ten to twenty bearings each. The paper measures two reference points that results on those datasets are rarely compared against:
+Bearing fault diagnosis and remaining-useful-life (RUL) prediction are evaluated largely on a few public datasets with ten to twenty bearings each. The paper measures two reference points for interpreting results on those datasets:
 
-- **Chance at the actual study size.** An exact, bearing-level label-permutation test, enumerating every class-preserving labelling (165 on XJTU-SY, 462 on Paderborn), shows that a labelling with no physical meaning reaches a 95th-percentile accuracy of **69.1-76.4 %** on eleven bearings, and that this band depends on the model and its input.
-- **A degenerate baseline for errors in minutes.** On run-to-failure data an RUL error and a total-lifetime error are the same quantity, and a constant "no life left" beats every trained estimator after the alarm.
+- **Chance at the actual study size.** An exact, bearing-level label-permutation test, enumerating every class-preserving labelling (165 on XJTU-SY, 462 on Paderborn), shows that on eleven bearings the 95th percentile of accuracy over labellings with no physical meaning is **69.1-76.4 %**, and that this band depends on the model and its input.
+- **A degenerate baseline for errors in minutes.** On run-to-failure data an RUL error and a total-lifetime error are the same quantity, and after the alarm a constant "no life left" prediction has a lower mean absolute error than every trained estimator.
 
-The same standard is applied to the paper's own results: all 31 claims are priced against their comparators in [`results/registry.csv`](results/registry.csv), and six of the eleven attribution results fall inside their own null.
+The same standard is applied to the paper's own results: all 31 claims are checked against their comparators in [`results/registry.csv`](results/registry.csv), and six of the eleven attribution results fall inside their own null.
 
 ## Repository layout
 
