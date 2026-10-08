@@ -15,6 +15,10 @@ Two kinds of row, and the `source` column says which:
     results were never cached to CSV. These are listed so the paper does not
     silently mix the two, and each names the notebook to re-run.
 
+Two columns qualify the attribution family: `p_selection_aware`, the Paderborn geometry p with
+notebook 11's configuration choice repeated under every labelling (build_selection_null.py),
+and `q_bh_selection_aware`, the Benjamini-Hochberg adjustment with that p substituted.
+
 Usage:  python src/build_registry.py
 Writes results/registry.csv
 """
@@ -30,23 +34,37 @@ OUT = ROOT / "results"
 rows = []
 
 
-def add(nb, rig, n_units, claim, value, comparator, comp_value, p=np.nan, source="recomputed", note=""):
+def add(nb, rig, n_units, claim, value, comparator, comp_value, p=np.nan, source="recomputed", note="",
+        p_selection_aware=np.nan):
     rows.append(dict(notebook=nb, rig=rig, n_units=n_units, claim=claim, value=value,
                      comparator=comparator, comparator_value=comp_value, p=p,
                      verdict=("" if pd.isna(p) else ("clears its null" if p < 0.05 else "inside its null")),
-                     source=source, note=note))
+                     source=source, note=note, p_selection_aware=p_selection_aware))
 
 
 # ---- attribution, exact permuted-label nulls (nb22; the accuracies are nb11/14/20/21)
 NB = {("XJTU-SY", "geometry"): "nb14/22", ("Paderborn", "geometry"): "nb11/22",
       ("XJTU-SY", "load-zone"): "nb20/22", ("Paderborn", "load-zone"): "nb21/22"}
 nb22 = d = pd.read_csv(P / "permutation_nulls.csv")
+# The Paderborn geometry configuration (400 N, carriers + sidebands) was chosen in nb11 on the
+# same eleven units. build_selection_null.py repeats that choice under every labelling, and the
+# row carries the resulting p beside the fixed-configuration one (paper section 4.2).
+sel = pd.read_csv(P / "selection_null_pu.csv")
 for (rig, ch), g in d.groupby(["rig", "channel"]):
     t = float(g.loc[g.is_true, "acc"].iloc[0])
     null = g.loc[~g.is_true, "acc"]
+    note, p_sel = "bearing-held-out, all assignments enumerated", np.nan
+    if (rig, ch) == ("Paderborn", "geometry"):
+        ts = float(sel.loc[sel.is_true, "acc_selection"].iloc[0])
+        assert abs(ts - t) < 1e-9, (ts, t)
+        k = int((sel.acc_selection >= ts).sum())
+        p_sel = round(k / len(sel), 4)
+        note += (f"; with nb11's choice among 12 configurations repeated under every labelling, "
+                 f"p = {k}/{len(sel)} and the null's 95th pct is "
+                 f"{sel.loc[~sel.is_true, 'acc_selection'].quantile(0.95):.4f}")
     add(NB[(rig, ch)], rig, 11, f"race attribution, {ch} features", round(t, 4),
         f"exact permuted-label null, 95th pct (N={len(g)})", round(float(null.quantile(0.95)), 4),
-        round(float((g.acc >= t).mean()), 4), note="bearing-held-out, all assignments enumerated")
+        round(float((g.acc >= t).mean()), 4), note=note, p_selection_aware=p_sel)
 
 # ---- the non-geometry channel: the study-size curve's own 15-tree forest and windows, with
 # the null enumerated over all 165 assignments instead of the curve's 20 draws (nb18/24)
@@ -134,8 +152,13 @@ def cp(k, n, conf=0.95):
             1.0 if k == n else beta.ppf(1 - a, k + 1, n - k))
 
 
+CONTROL = {"Paderborn": "load-zone", "XJTU-SY": "non-geometry"}       # inside their own full-set nulls
 for rig, f_ in (("Paderborn", "power_curve.csv"), ("XJTU-SY", "power_curve_xjtu.csv")):
-    pcv = pd.read_csv(P / f_).query("channel == 'geometry'")
+    allc = pd.read_csv(P / f_)
+    pcv = allc.query("channel == 'geometry'")
+    ctrl = allc[allc.channel == CONTROL[rig]]
+    reach = 1 / (ctrl.n_perm + 1) < 0.05            # subsets whose exact null can return p < 0.05
+    kc, kr = int((ctrl.p < 0.05).sum()), int((ctrl[reach].p < 0.05).sum())
     det = {}
     for n_, gn in pcv.groupby("n"):
         k, m = int((gn.p < 0.05).sum()), len(gn)
@@ -143,13 +166,15 @@ for rig, f_ in (("Paderborn", "power_curve.csv"), ("XJTU-SY", "power_curve_xjtu.
     first = int(min(n_ for n_, v in det.items() if v[2] >= 0.8))
     k, m, rate, (lo, hi), _ = det[first]
     reachable = [n_ for n_, v in det.items() if v[4] <= 0.05]
-    add("nb23/24", rig, first, "units needed before a real attribution effect is detected in 80 % of subsets",
+    add("nb23/24", rig, first, "units needed before the geometry features reach p < 0.05 in 80 % of subsets",
         first, "units used by every attribution result in this project", 11,
         note=f"{k} of {m} subsets at n={first}, {rate:.0%} (Clopper-Pearson 95 % CI "
              f"[{lo:.0%}, {hi:.0%}], and the subsets share units so it is optimistic); "
              f"rate by unit count " + ", ".join(f"n={n_}: {v[2]:.0%}" for n_, v in det.items())
              + f"; p < 0.05 is unreachable by construction below n={min(reachable)}, where the "
-               f"per-subset floor exceeds 0.05")
+               f"per-subset floor exceeds 0.05; negative control ({CONTROL[rig]}) significant in "
+               f"{kc} of {len(ctrl)} subsets, {kr} of {int(reach.sum())} ({kr / reach.sum():.1%}) "
+               f"where p < 0.05 is reachable")
 
 # ---- the reject option: sixteen rule-and-feature combinations, none usable (nb15)
 rj = pd.read_csv(P / "reject_option.csv")
@@ -170,8 +195,9 @@ add("nb15", "XJTU-SY", 11, "confidence separating a wrong in-scope call from a r
     note=f"the question that does have an answer; {wc.loc[~wc.pooling.str.startswith('80'), 'auroc'].iloc[0]:.3f} "
          f"if every snapshot is pooled, where three bearings supply 71 % of them")
 
-# ---- six claims whose intermediates nb13, nb17, nb20, nb21 and nb25 write out, so they are
-# recomputed here like everything else rather than transcribed
+# ---- the six claims that used to be quoted. Phase 2 of docs/submission-checklist.md had
+# nb13, nb17, nb20, nb21 and nb25 write their intermediates out, so they are recomputed here
+# like everything else and Limitation 6 is gone.
 det = pd.read_csv(P / "xjtu_detection_own_vs_pooled.csv")
 add("nb13", "XJTU-SY", len(det), "faults detected, per-unit healthy baseline",
     f"{int(det['own'].notna().sum())} of {len(det)}", "a pooled 14-unit fleet baseline",
@@ -203,7 +229,7 @@ add("nb25", "XJTU-SY", 11, "calibration error when the phase key is replaced by 
 
 lz = pd.read_csv(P / "xjtu_loadzone_channels.csv")
 fr = lz[lz.name.str.startswith("LZ_frdev")].iloc[0]
-add("nb20/22", "XJTU-SY", 11, "race attribution, LZ_frdev alone (a pure speed reading)",
+add("nb20/22", "XJTU-SY", 11, "race attribution, LZ_frdev alone (a speed reading)",
     round(float(fr.lobo), 4), "exact permuted-label null, 95th pct",
     round(float(nb22.loc[(nb22.rig == "XJTU-SY") & (nb22.channel == "geometry") & ~nb22.is_true,
                          "acc"].quantile(0.95)), 4),
@@ -230,6 +256,12 @@ def bh(R):
     adj = np.minimum.accumulate(adj)[::-1]                  # step-up: enforce monotonicity
     R["q_bh"] = np.nan
     R.loc[q.index, "q_bh"] = np.round(np.minimum(adj, 1.0), 4)
+    # The same family with the Paderborn geometry p replaced by its selection-aware value (§4.2).
+    qs = R.loc[fam, "p_selection_aware"].fillna(R.loc[fam, "p"]).sort_values()
+    adj = (qs.to_numpy() * m / np.arange(1, m + 1))[::-1]
+    adj = np.minimum.accumulate(adj)[::-1]
+    R["q_bh_selection_aware"] = np.nan
+    R.loc[qs.index, "q_bh_selection_aware"] = np.round(np.minimum(adj, 1.0), 4)
     return R, m
 
 
@@ -246,3 +278,6 @@ if __name__ == "__main__":
     print(f[["rig", "claim", "p", "q_bh", "verdict"]].to_string(index=False, max_colwidth=52))
     print(f"survive at FDR 5 %: {int((f.q_bh < 0.05).sum())} of {m_fam}; "
           f"clear at raw 0.05: {int((f.p < 0.05).sum())}")
+    s_ = f[f.q_bh_selection_aware < 0.05]
+    print(f"with the Paderborn configuration choice repeated under every labelling: {len(s_)} of {m_fam} "
+          f"survive, at q = " + ", ".join(f"{v:.4f}" for v in sorted(s_.q_bh_selection_aware)))

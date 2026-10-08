@@ -2,7 +2,7 @@
 Download the Paderborn University (PU) Bearing DataCenter bearings used by this
 project's artificial->real benchmark (notebooks 02-05).
 
-Source: https://mb.uni-paderborn.de/kat/forschung/datacenter/bearing-datacenter/
+Source: https://mb.uni-paderborn.de/en/kat/research/bearing-datacenter
 Archives hosted at: https://groups.uni-paderborn.de/kat/BearingDataCenter/<CODE>.rar
 
 Why Paderborn (vs. CWRU): it records vibration *and* two motor phase currents
@@ -12,7 +12,7 @@ to our 8-channel sensor list (RESEARCH_NOTES.md section 2).
 Benchmark set (~170 MB per bearing, ~4.2 GB total, 25 bearings):
     Healthy               K001 K002 K003 K004 K005 K006
     Artificial, outer race  KA01(EDM) KA03(engraver) KA05(engraver) KA07(drill)
-    Artificial, inner race  KI01(EDM) KI03(engraver) KI05(engraver) KI07(drill)
+    Artificial, inner race  KI01(EDM) KI03(engraver) KI05(engraver) KI07(engraver)
     Real, outer race       KA04 KA15 KA16 KA22 KA30  (accelerated lifetime test)
     Real, inner race       KI04 KI14 KI16 KI17 KI18 KI21  (accelerated lifetime test)
 
@@ -59,7 +59,7 @@ MANIFEST = [
     ("KI01", "inner race, artificial (EDM), level 1"),
     ("KI03", "inner race, artificial (engraver), level 1"),
     ("KI05", "inner race, artificial (engraver), level 1"),
-    ("KI07", "inner race, artificial (drilling), level 1"),
+    ("KI07", "inner race, artificial (engraver), level 2"),
     ("KA04", "outer race, real (lifetime test), level 1"),
     ("KA15", "outer race, real (lifetime test), level 1"),
     ("KA16", "outer race, real (lifetime test), level 2"),

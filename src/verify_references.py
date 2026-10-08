@@ -12,8 +12,8 @@ distinguishes "verified elsewhere" from "not verified".
 
     python src/verify_references.py            # exits non-zero on any new problem
 
-Last full pass: 2026-09-22. Result: 40 checked automatically, 6 by the routes
-in KNOWN, 0 outstanding.
+Last full pass: 2026-10-04 (47 entries). Result: 41 checked automatically, 6 by
+the routes in KNOWN, 0 outstanding.
 """
 import json
 import pathlib
@@ -32,21 +32,21 @@ UA = {"User-Agent": "paper-a-ref-check/1.0 (mailto:mahmudulmadu@gmail.com)"}
 # Entries Crossref does not index, or indexes under a different record.
 # The value is how the entry was verified instead.
 KNOWN = {
-    7: "JMLR deposits no DOIs. Verified against jmlr.org/papers/v11/ojala10a.html: "
-       "Markus Ojala, Gemma C. Garriga, JMLR 11(62):1833-1863, 2010. A Crossref title "
-       "search returns the earlier ICDM 2009 paper of the same name, which is a different work.",
-    10: "Preprint only. The arXiv API refuses this client (HTTP 406); verified against the "
-        "citation metadata on arxiv.org/abs/2607.08273: Yang Shaoliang, Wang Jun, Wang Yunsheng, "
-        "posted 2026-07-09. No journal version found in Crossref.",
-    13: "Preprint only. Verified against arxiv.org/abs/2407.14625: R. K. Rosa, Danilo Braga, "
+    15: "DOI 10.36001/ijphm.2010.v1i1.1336 resolves and the author list matches. Crossref "
+        "carries the deposit year 2021; the article is IJPHM volume 1, issue 1, 2010.",
+    16: "Preprint only. Verified against arxiv.org/abs/2407.14625: R. K. Rosa, Danilo Braga, "
         "Danilo Silva, posted 2024-07-19. No journal version found in Crossref.",
-    15: "Preprint only. Verified against arxiv.org/abs/2402.12715: Wenqian Ye, Luyang Jiang, "
+    20: "Preprint only. Verified against arxiv.org/abs/2402.12715: Wenqian Ye, Luyang Jiang, "
         "Eric Xie, Guangtao Zheng, Yunsheng Ma, Xu Cao et al., posted 2024-02-20, revised 2025. "
         "No journal version found in Crossref.",
-    35: "IEEE PHM'12 proceedings, not in Crossref. Verified against the authors' HAL record "
+    32: "JMLR deposits no DOIs. Verified against jmlr.org/papers/v11/ojala10a.html: "
+       "Markus Ojala, Gemma C. Garriga, JMLR 11(62):1833-1863, 2010. A Crossref title "
+       "search returns the earlier ICDM 2009 paper of the same name, which is a different work.",
+    34: "IEEE PHM'12 proceedings, not in Crossref. Verified against the authors' HAL record "
         "hal-00719503: seven authors, fifth is Brigitte Chebel-Morello (not 'Morello'), 2012.",
-    37: "DOI 10.36001/ijphm.2010.v1i1.1336 resolves and the author list matches. Crossref "
-        "carries the deposit year 2021; the article is IJPHM volume 1, issue 1, 2010.",
+    43: "Preprint only. The arXiv API refuses this client (HTTP 406); verified against the "
+        "citation metadata on arxiv.org/abs/2607.08273: Yang Shaoliang, Wang Jun, Wang Yunsheng, "
+        "posted 2026-07-09. No journal version found in Crossref.",
 }
 
 
