@@ -5,9 +5,9 @@ project's artificial->real benchmark (notebooks 02-05).
 Source: https://mb.uni-paderborn.de/en/kat/research/bearing-datacenter
 Archives hosted at: https://groups.uni-paderborn.de/kat/BearingDataCenter/<CODE>.rar
 
-Why Paderborn (vs. CWRU): it records vibration *and* two motor phase currents
-(64 kHz), plus speed/torque/load-force/temperature — the closest public match
-to our 8-channel sensor list (RESEARCH_NOTES.md section 2).
+Why Paderborn (vs. CWRU): it records vibration and two motor phase currents
+(64 kHz), plus speed/torque/load-force/temperature. This is the closest public
+match to our 8-channel sensor list (RESEARCH_NOTES.md section 2).
 
 Benchmark set (~170 MB per bearing, ~4.2 GB total, 25 bearings):
     Healthy               K001 K002 K003 K004 K005 K006
@@ -16,14 +16,14 @@ Benchmark set (~170 MB per bearing, ~4.2 GB total, 25 bearings):
     Real, outer race       KA04 KA15 KA16 KA22 KA30  (accelerated lifetime test)
     Real, inner race       KI04 KI14 KI16 KI17 KI18 KI21  (accelerated lifetime test)
 
-notebooks/02-04 used the 5-bearing starter subset (K001/KA01/KI01/KA04/KI04) -
-one bearing per class x domain cell, so "domain" and "bearing identity" were
+notebooks/02-04 used the 5-bearing starter subset (K001/KA01/KI01/KA04/KI04),
+with one bearing per class x domain cell, so "domain" and "bearing identity" were
 confounded. This 25-bearing set gives multiple bearings per cell (several
 damage-creation methods for artificial; several real units for real), so a
-train/test split can hold out *bearings*, not just recordings, and the
+train/test split can hold out bearings, not just recordings, and the
 artificial->real gap gets error bars instead of a single number.
 
-The artificial-vs-real distinction matters (the sim-to-real gap):
+The artificial-vs-real distinction is the sim-to-real gap:
 artificial damage is the physical analogue of our simulated faults, real
 damage is the deployment target.
 
@@ -78,7 +78,7 @@ OUT_DIR = pathlib.Path(__file__).resolve().parent.parent / "data" / "raw" / "pad
 
 def find_tar():
     # Prefer Windows 11's built-in System32 tar.exe (bsdtar/libarchive, reads
-    # RAR) over whatever "tar"/"bsdtar" a shell's PATH resolves first - Git
+    # RAR) over whatever "tar"/"bsdtar" a shell's PATH resolves first. Git
     # Bash ships its own tar.exe (usr/bin/tar.exe) with no RAR support, and
     # if that shadows System32 on PATH, extraction fails with exit code 128
     # even though the archive downloaded fine.

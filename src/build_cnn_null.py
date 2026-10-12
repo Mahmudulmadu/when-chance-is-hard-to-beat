@@ -1,39 +1,39 @@
 # -*- coding: utf-8 -*-
-"""A deep baseline under the permutation null -- notebook 28.
+"""Deep baseline (WDCNN) under the permutation null, control and fingerprint tests (notebook 28).
 
-The standing objection to this project is "only Random Forest". The standing
-answer (notebooks 22-23) is that with eleven units the null band reaches 74 %,
-so no architecture can be ranked. Both are arguments. This is the measurement:
-one standard 1D-CNN -- WDCNN (Zhang, Peng, Li, Chen & Zhang 2017), the
-wide-first-kernel network that is the default deep baseline in bearing
-diagnosis -- put through exactly the tests the forest was put through.
+The usual objection to this project is "only Random Forest". The usual answer
+(notebooks 22-23) is that with eleven units the null band reaches 74 %, so no
+architecture can be ranked. Both the objection and the answer are arguments.
+Here we measure it: one standard 1D-CNN, WDCNN (Zhang, Peng, Li, Chen & Zhang
+2017; the wide-first-kernel network that is the default deep baseline in bearing
+diagnosis), is put through exactly the tests the forest was put through.
 
-  * **the exact permutation null** (nb22): every OR/IR assignment across the
+  * the exact permutation null (nb22): every OR/IR assignment across the
     eleven units that preserves the class counts, C(11,3)=165 on XJTU-SY and
     C(11,5)=462 on Paderborn, each scored bearing-held-out;
-  * **the deliberately-incapable control** (nb20/22): the same network fed
+  * the deliberately-incapable control (nb20/22): the same network fed
     crops whose samples have been shuffled in time, which keeps every
     amplitude statistic and destroys every waveform;
-  * **the bearing-identity fingerprint** (nb21): can the network tell six
+  * the bearing-identity fingerprint (nb21): whether the network can tell six
     nominally identical healthy Paderborn bearings apart, run-held-out, against
-    16.7 % chance -- and, secondarily, fifteen XJTU-SY units from their first
+    16.7 % chance, and, secondarily, fifteen XJTU-SY units from their first
     twenty healthy snapshots against 6.7 %.
 
 What keeps this fair to both sides:
 
-  * **No early stopping, no validation set.** A fixed epoch budget. Stopping on
+  * No early stopping, no validation set. A fixed epoch budget. Stopping on
     the held-out unit is the leakage notebook 05 caught in a different form.
-  * **Paired seeds.** The weight init and the crop draws depend on the fold, not
+  * Paired seeds. The weight init and the crop draws depend on the fold, not
     on the labelling, so the true labelling and all 164 / 461 permuted ones start
     from the same weights and see the same crops. The null is then a paired
     comparison rather than a noisy one.
-  * **Identical scoring to nb22.** Logits averaged over non-overlapping crops of
+  * Identical scoring to nb22. Logits averaged over non-overlapping crops of
     a snapshot (XJTU) or run (Paderborn), argmax, per-unit accuracy, mean over
     units. The forest's 94.1 % / 85.5 % were computed the same way.
-  * **Per-crop standardisation.** Each 2 048-sample crop is z-scored, so the
-    network sees waveform shape rather than gain -- the usual WDCNN practice,
-    and it removes the easiest fingerprint (RMS) before the test asks about
-    fingerprinting.
+  * Per-crop standardisation. Each 2 048-sample crop is z-scored, so the
+    network sees waveform shape rather than gain. This is the usual WDCNN
+    practice, and it removes the easiest fingerprint (RMS) before the test asks
+    about fingerprinting.
 
 Usage:
   python src/build_cnn_null.py --rig xjtu --mode time            # seconds per fit
@@ -54,8 +54,8 @@ the spectrum models add a suffix, e.g. cnn_null_pu_orders_speccnn.csv.
 The spectrum probe (`--input orders`): the same folds, seeds, scoring and
 caching applied to the order-domain envelope spectrum from
 src/build_envelope_orders.py, with a small SpecCNN or a forest on all 576 bins.
-It exists to answer "you gave the network the wrong representation" -- see the
-notebook for why the answer is the unit count, not the input.
+It exists to answer "you gave the network the wrong representation"; the notebook
+explains why the answer is the unit count and not the input.
 """
 import argparse
 import itertools
@@ -104,7 +104,7 @@ class WDCNN(nn.Module):
 
 class SpecCNN(nn.Module):
     """The spectrum probe: three 9-wide conv blocks over the 576-bin order-domain
-    envelope spectrum (src/build_envelope_orders.py), FC 100. Not WDCNN -- a
+    envelope spectrum (src/build_envelope_orders.py), FC 100. Not WDCNN: a
     second, smaller model for a second, smaller input."""
 
     def __init__(self, n_classes):
@@ -136,7 +136,7 @@ class Rig:
         self.meta = pd.read_csv(OUT / f"{src}_{name}_meta.csv")
         self.n_crops = self.X.shape[1] // CROP if input == "raw" else 1
         if input == "orders_cal":
-            # each row minus its own unit's healthy reference -- nb22's forest features
+            # each row minus its own unit's healthy reference: nb22's forest features
             # carry exactly this calibration on XJTU-SY; Paderborn has no healthy history
             if name != "xjtu":
                 raise SystemExit("orders_cal needs a healthy history per unit: XJTU-SY only (nb19)")
@@ -323,7 +323,7 @@ def mode_null(rig, cfg, n_perm):
 
 
 def mode_true(rig, cfg):
-    """The true labelling alone -- for a budget or input the null was not run on.
+    """The true labelling alone, for a budget or input the null was not run on.
     With the same seed, threads and budget it reproduces the null's own true row."""
     units, truth = race_units(rig)
     acc, per = score(rig, units, truth, cfg)

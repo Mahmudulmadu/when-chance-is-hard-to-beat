@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Can stage 2 say "I do not recognise this"? -- notebook 15.
+"""Reject option for stage 2: flag snapshots unlike the training classes (notebook 15).
 
-XJTU-SY has fifteen bearings, of which eleven failed by inner or outer race --
-the two classes the attribution stage has -- and four failed some other way: two
+XJTU-SY has fifteen bearings, of which eleven failed by inner or outer race (the
+two classes the attribution stage has) and four failed some other way: two
 cages, one compound fault, one combined inner+outer. Those four are the closest
-thing this project has to naturally grown out-of-scope damage, and a reject
+thing this project has to naturally occurring out-of-scope damage, and a reject
 option is the standard remedy: score how unlike the training classes a snapshot
 is, and refuse to answer above a threshold.
 
@@ -12,19 +12,19 @@ This caches the measurement notebook 15 made interactively, because the paper no
 reports it (section 5.8) and every number the paper reports should be recomputable
 from a script rather than read off a notebook.
 
-Held at the notebook's settings, since the point is to reproduce it: 300-tree
+Held at the notebook's settings, because the aim is to reproduce it: 300-tree
 forest, random_state 0; the per-unit alarm from the RMS/kurtosis exceedance of
 notebook 07; features as change from each unit's own first twenty snapshots;
 post-alarm rows only; 80 snapshots per unit when pooling, evenly spaced, so a
 2 538-minute unit does not outvote a 42-minute one.
 
-Four rules, each scoring HIGH for "less like the training classes": model
+Four rules, each scoring high for "less like the training classes": model
 confidence (1 - max class probability), Mahalanobis distance to the nearer class
 centre, mean 10-nearest-neighbour distance, one-class forest. Four feature sets:
 the nine envelope order bands, plus RMS/kurtosis, plus the vertical
 accelerometer, plus everything measured. Sixteen combinations.
 
-The comparator, in the form section 4.4 demands of any such claim: a rule that
+The comparator, in the form section 4.4 requires of any such claim: a rule that
 reads nothing scores 0.500 AUROC, and for the supervised version below, a model
 that always answers "in scope" gets 11 of the 15 units right.
 
@@ -164,12 +164,12 @@ if __name__ == "__main__":
     d = pd.DataFrame(rows)
     d.to_csv(OUT / "reject_option.csv", index=False)
 
-    # The other question the same score can answer: not "am I outside my classes?" but
-    # "am I about to get this wrong inside them?" -- scored on in-scope snapshots only,
-    # confidence against whether the call was wrong.
+    # The same score can also answer a second question, whether a call inside the classes
+    # is about to be wrong. It is scored on in-scope snapshots only, confidence against
+    # whether the call was wrong.
     # Scored twice on purpose. Notebook 15 pooled every in-scope snapshot, which lets the
-    # three longest-lived bearings supply most of the rows -- the composition problem this
-    # project reports elsewhere. The thinned version is the one consistent with that rule,
+    # three longest-lived bearings supply most of the rows (the composition problem this
+    # project reports elsewhere). The thinned version is the one consistent with that rule,
     # so both are cached and the paper leads with the thinned one.
     P = post(G, alarm, bear, ENV)
     cf, wr = {True: [], False: []}, {True: [], False: []}

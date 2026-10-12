@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
-"""How many units does an attribution claim need? -- notebook 23.
+"""Number of units an attribution claim needs before it separates from chance (notebook 23).
 
 Three notebooks have reached the same constraint from different directions:
-attribution priced at "about six real units" (nb14), only 6 of 11 units clearing
+attribution put at "about six real units" (nb14), only 6 of 11 units clearing
 the RUL floor's safety target (nb17), and a label-permutation null whose 95th
-percentile reaches 69-74 % on eleven units (nb22). None of them answers the
-question numerically: **at what number of units does a real effect become
-distinguishable from chance?**
+percentile reaches 69-74 % on eleven units (nb22). None of them gives a
+numerical answer to the question of how many units are needed before a real
+effect becomes distinguishable from chance.
 
 This measures it. For each unit count n, draw subsets of n bearings, and within
 each subset compute both
 
-  * the accuracy under the TRUE labels, and
+  * the accuracy under the true labels, and
   * the null band from permuting labels inside that same subset,
 
 using the identical bearing-held-out protocol. Where the true curve separates
@@ -20,17 +20,17 @@ smallest effect that study size could ever resolve.
 
 Paderborn is used because its 20 runs per bearing keep 50k random-forest fits
 tractable, and because notebook 22 established that its geometry channel carries
-a genuinely real effect (85.5 %, p = 0.0043) to serve as the signal being
-detected, alongside its load-zone channel which does not (p = 0.147).
+a real effect (85.5 %, p = 0.0043) to serve as the signal being detected,
+alongside its load-zone channel, which does not (p = 0.147).
 
 Usage:  python src/build_power_curve.py
 Writes data/processed/power_curve.csv
 
-    CORRECTION (notebook 24): the null must EXCLUDE the true labelling. When the
+    Correction (notebook 24): the null must exclude the true labelling. When the
     true assignment is drawn into a sampled null, its score equals the true score,
     so p >= 1/N and the subset can never reach p < 0.05. That happens 71 % of the
     time on XJTU-SY at n=8 (k=2, C(8,2)=28 drawn 20) against 29 % on Paderborn,
-    so it biases against exactly the datasets with a small minority class. The
+    so it biases against the datasets with a small minority class. The
     null is now the non-true labellings and p uses the standard
     (1 + #{null >= true}) / (1 + N) form, whose floor is 1/21 = 0.048.
 """
@@ -58,7 +58,7 @@ GEO = ["BPFO", "BPFI", "FR", "BPFI_sb1", "BPFO_sb1", "BPFI_sb2", "BPFI_h2_sb1"]
 # than the parallelism saves (measured: 179 ms with n_jobs=-1 against 120 with 1).
 # 15 trees rather than the protocol's 300 keeps ~25k fits to about 25 minutes, and
 # reproduces notebook 22 at n=11 to within two points (geometry 85.0 % against
-# 85.5 %, load-zone 60.5 % against 62.7 %) -- the curve measures SEPARATION between
+# 85.5 %, load-zone 60.5 % against 62.7 %). The curve measures separation between
 # the true labels and their null, and both sides use the same forest.
 RF = dict(n_estimators=15, random_state=0, n_jobs=1)
 # Referee M3: 12 subsets per size cannot support a point estimate, and N_PERM=20 puts

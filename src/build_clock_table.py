@@ -1,35 +1,33 @@
 # -*- coding: utf-8 -*-
-"""What does an RUL number beat? -- notebook 27.
+"""Compare remaining-life estimators with degenerate baselines (notebook 27).
 
 Notebook 16 found that the two-channel state is worse than the clock it contains
 over a whole trajectory (132 minutes against 120) and better only after the
-alarm, and it stated -- in prose -- that predicting remaining life on
-run-to-failure data is the same act as predicting total lifetime. Both claims
-are load-bearing for the paper and neither is currently a table.
+alarm. It also stated, in prose, that predicting remaining life on run-to-failure
+data is the same as predicting total lifetime. The paper relies on both claims
+and neither was a table.
 
-This builds the table. Every estimator is scored against the same held-out unit
-under one leave-one-bearing-out pass, over five scopes, with the identity
-checked numerically rather than asserted.
+This builds the table. Every estimator is scored on the same held-out unit in one
+leave-one-bearing-out pass, over five scopes, and the identity is checked
+numerically rather than asserted.
 
 Estimators, in increasing order of what they are allowed to know:
 
-  * **zero**       -- RUL = 0. Trivially safe, gives up everything. The floor of
-                      the scale: any model that cannot beat it is not a model.
-  * **survived**   -- RUL = minutes already run, i.e. "it will last twice as long
-                      as it has". Uses the clock and nothing else, and exists
-                      because notebook 16 observed that both its estimators were
-                      "flattered by a floor they get for free" without ever
-                      scoring that floor on its own.
-  * **med_all**    -- median lifetime of the training units, minus minutes run.
-  * **med_cond**   -- the same, restricted to units at this operating point.
-                      An engineer knows the load and the speed, so this is the
-                      strongest baseline that reads no vibration at all.
-  * **clock**      -- a forest given only (elapsed, fr_Hz). Notebook 16's
-                      learned clock: the same two facts, fitted rather than
-                      assumed.
-  * **state**      -- notebook 16's forest over all 17 features.
-  * **clock_post / state_post** -- both refitted on post-alarm rows only, which
-                      is how stage 2 would actually be deployed.
+  * zero: RUL = 0. Trivially safe, gives up everything. It is the floor of the
+    scale, and a model that cannot beat it is of no use.
+  * survived: RUL = minutes already run, i.e. "it will last twice as long as it
+    has". Uses the clock and nothing else. It exists because notebook 16 observed
+    that both its estimators gained from a floor that comes with the clock, and
+    never scored that floor on its own.
+  * med_all: median lifetime of the training units, minus minutes run.
+  * med_cond: the same, restricted to units at this operating point. An engineer
+    knows the load and the speed, so this is the strongest baseline that reads no
+    vibration at all.
+  * clock: a forest given only (elapsed, fr_Hz). Notebook 16's learned clock: the
+    same two facts, fitted rather than assumed.
+  * state: notebook 16's forest over all 17 features.
+  * clock_post / state_post: both refitted on post-alarm rows only, which is how
+    stage 2 would actually be deployed.
 
 Scopes: whole trajectory, post-alarm, the single snapshot at the alarm, and each
 fifth of life. Notebook 16 reported fifths for the state alone; the gap to a
@@ -38,7 +36,7 @@ clock is what makes a fifth interpretable, so every estimator is binned here.
 The identity: RUL = (L-1) - t with t known exactly, so any RUL estimate implies a
 lifetime estimate L_hat = RUL_hat + t + 1, and the two errors are the same
 number. The build records both and their difference, so the claim is checked at
-every one of the 9216 snapshots rather than argued.
+every one of the 9216 snapshots.
 
 Usage:  python src/build_clock_table.py
 Writes data/processed/clock_table.csv   (per snapshot, per estimator)
@@ -85,7 +83,7 @@ class Exceedance:
 
 
 def load():
-    '''Notebook 16's frame, unchanged -- this build must not move its numbers.'''
+    '''Notebook 16's frame, unchanged: this build must not move its numbers.'''
     ds = pd.read_csv(OUT / "xjtu_envelope_features.csv")
     bear = sorted(ds["Bearing"].unique())
     G = {b: ds[ds["Bearing"] == b].sort_values("Snapshot").reset_index(drop=True)

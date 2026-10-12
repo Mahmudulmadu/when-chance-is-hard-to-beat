@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
-"""The deliberately incapable control for the load-zone channel -- notebook 21.
+"""Deliberately incapable control for the load-zone channel (notebook 21).
 
-Notebook 20's `LZ_frdev` scored 81 % on nothing at all, and the check that caught
-it was asking whether a feature could physically carry what it appeared to carry.
-The project adopted that as a standing control: whenever a feature family is
-added, run one that *cannot* work and see what it gets.
+Notebook 20's `LZ_frdev` scored 81 % on nothing at all. The check that caught it
+asked whether a feature could physically carry what it appeared to carry. We
+adopted that as a standing control: whenever a feature family is added, run one
+that cannot work and see what it gets.
 
 This is that control for the load-zone fold. It is identical to
 `build_loadzone_paderborn.py` in every respect except the fold rate: it folds the
-envelope at **1.37 x shaft rate**, which is not synchronous with the shaft and is
+envelope at 1.37 x shaft rate, which is not synchronous with the shaft and is
 not a bearing order, so it cannot carry load-zone modulation. Whatever it scores
-is a measurement of something other than the physics the channel claims.
+comes from something other than the physics the channel claims.
 
 Result (notebook 21): 53.6 % artificial->real and 44.1 % among real damaged
-bearings, against the true fold's 74.5 % and 65.5 % -- the control fails as it
-should, so the load-zone channel is measuring genuine shaft-locked content.
+bearings, against the true fold's 74.5 % and 65.5 %. The control fails as it
+should, so the load-zone channel measures shaft-locked content.
 
 Usage:  python src/build_decoy_fold.py
 Writes data/processed/pu_<cond>_decoy_fold.csv

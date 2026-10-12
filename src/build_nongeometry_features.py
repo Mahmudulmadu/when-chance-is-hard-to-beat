@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 """Non-geometry vibration features for XJTU-SY and Paderborn (notebook 18).
 
-The defining constraint, and the whole point of the channel: **no feature may
-reference BPFO, BPFI, BSF, FTF or the shaft rate.** Everything here is either a
-property of *where in absolute Hz* the energy sits, or a property of the *shape*
-of the spectrum -- never of a repetition rate predicted from bearing geometry.
+The constraint that defines this channel: no feature may reference BPFO, BPFI,
+BSF, FTF or the shaft rate. Everything here is either a property of where in
+absolute Hz the energy sits or a property of the shape of the spectrum, never of
+a repetition rate predicted from bearing geometry.
 
 Three notebooks arrived at this requirement independently:
-  nb12  detection   -- KA15 is silent at BPFO, KA22 is off-frequency (order 5.5)
-  nb15  reject      -- Bearing1_4 raises nothing at any order
-  nb17  attribution -- early inner race is confidently mislabelled outer race
+  nb12  detection:   KA15 is silent at BPFO, KA22 is off-frequency (order 5.5)
+  nb15  reject:      Bearing1_4 raises nothing at any order
+  nb17  attribution: early inner race is confidently mislabelled outer race
 
 Feature families, per channel:
   SK*    fast kurtogram over a log-spaced filterbank. The band that maximises
-         envelope kurtosis is where the impulsiveness lives; its centre
+         envelope kurtosis is the most impulsive one; its centre
          frequency is the resonance-tracking feature.
   shape  centroid, spread, entropy, flatness, 95 % rolloff of the raw spectrum
   env*   entropy and flatness of the envelope spectrum inside the most
-         impulsive band -- peaky means a geometry-locked repetition, diffuse
-         means something else. This is the one that could catch KA22.
+         impulsive band. A peaky spectrum means a geometry-locked repetition, a
+         diffuse one means something else. This is the one that could catch KA22.
   oct*   fixed-Hz octave energies, geometry-free by construction
 
 Usage:  python src/build_nongeometry_features.py xjtu|paderborn

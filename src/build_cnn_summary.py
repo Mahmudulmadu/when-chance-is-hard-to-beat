@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Assemble every number notebook 28 quotes -- notebook 28.
+"""Assemble every number quoted in notebook 28 from the CNN result files.
 
 The CNN results come from `src/build_cnn_null.py`, run at --threads 5 (the thread
 count the nulls use). This script reads those outputs, recomputes the forest
-references under the *same* splits the network was scored on, adds the two
+references under the same splits the network was scored on, adds the two
 label-only baselines, and checks that every quantity scored twice came out the
 same both times. It writes nothing new to the raw caches and trains no network.
 
@@ -56,7 +56,7 @@ def one(path):
 
 
 def forest_geometry_per_unit():
-    """nb22's forest, true labelling, per unit -- the split the network was scored on."""
+    """nb22's forest, true labelling, per unit, on the split the network was scored on."""
     out = {}
     for rig, loader in (("xjtu", N22.xjtu_matrices), ("pu", N22.paderborn_matrices)):
         units, truth, chans = loader()

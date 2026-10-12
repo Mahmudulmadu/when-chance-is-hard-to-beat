@@ -5,24 +5,24 @@ Download the XJTU-SY rolling element bearing accelerated life test datasets:
 Source page: https://biaowang.tech/xjtu-sy-bearing-datasets/
 Mirror used here: Google Drive, via gdown (handles the large-file virus-scan
 interstitial). Measured ~3.7 MB/s against MediaFire's ~0.2 MB/s on the same
-connection - 20 minutes vs. 6 hours for the same 4.4 GB - so this is a speed
+connection (20 minutes vs. 6 hours for the same 4.4 GB), so this is a speed
 choice, not an availability one. MediaFire is kept below as a fallback in case
 the Drive quota is exhausted ("too many users have viewed this file"); Dropbox
 and Baidu both need an account, and MEGA needs a browser session.
 
 Why XJTU-SY (vs. staying on Paderborn):
-Paderborn records each bearing at *one* health state, so it structurally cannot
-measure detection under per-unit calibration - the thing notebook 08 identified
-as the open question, and notebook 10 showed is condition-dependent. XJTU-SY
-records every unit healthy *and then* damaged, so each bearing is its own
+Paderborn records each bearing at one health state, so it structurally cannot
+measure detection under per-unit calibration, which notebook 08 identified
+as the open question and notebook 10 showed is condition-dependent. XJTU-SY
+records every unit healthy and then damaged, so each bearing is its own
 baseline. It also documents the failed element per bearing (below), which
 notebook 11 showed is a hard requirement: leave-one-bearing-out CV on
-artificial damage *anti-selects* attribution features (rank correlation -0.66),
+artificial damage anti-selects attribution features (rank correlation -0.66),
 so attribution features can only be validated on real units of known fault type.
 
 Rig: LDK UER204 bearings, 8 balls, ball d = 7.92 mm, pitch D = 34.55 mm,
 contact angle 0 deg -> BPFO = 3.083 x fr, BPFI = 4.917 x fr, BSF = 2.067 x fr,
-FTF = 0.3854 x fr. (Close to Paderborn's 6203: BPFO 3.071, BPFI 4.929 - the
+FTF = 0.3854 x fr. (Close to Paderborn's 6203: BPFO 3.071, BPFI 4.929; the
 notebook 06-11 envelope/order pipeline transfers with only fr and the band
 table changed.)
 
@@ -37,7 +37,7 @@ against the extracted tree. The fault element matters as much as the lifetime
 here: notebook 11 showed attribution features can only be selected and
 validated on real units of known fault type.
 
-Note the class balance - 8 outer race, 3 inner race, 2 cage, 2 compound. Cage
+Note the class balance: 8 outer race, 3 inner race, 2 cage, 2 compound. Cage
 and compound failures are modes Paderborn does not contain at all, so the
 race-only OR/IR framing of notebooks 05-11 does not cover this dataset.
 
@@ -69,15 +69,15 @@ Citation required by the authors:
   Transactions on Reliability, vol. 69, no. 1, pp. 401-412, 2020.
 
 Extraction needs a real RAR tool. The archive is a 6-volume RAR5 set, and
-libarchive/bsdtar - which is what download_paderborn.py uses - reads only the
+libarchive/bsdtar (which is what download_paderborn.py uses) reads only the
 entries stored in volume 1 and then stops with "Too small block encountered"
 at 35Hz12kN + part of 37.5Hz11kN (1556 of 9216 files). It does not follow the
 volume chain. RARLAB's UnRAR does: `UnRAR t part01.rar` walks all three
 conditions and reports "All OK".
 
 So `find_unrar()` below bootstraps one: it downloads RARLAB's UnRAR, which is
-shipped as a *single*-volume self-extracting RAR - and single-volume is exactly
-the case bsdtar handles fine - so the tool we have unpacks the tool we need.
+shipped as a single-volume self-extracting RAR. Single-volume is the case bsdtar
+handles fine, so the tool we have unpacks the tool we need.
 Nothing is installed system-wide; UnRAR.exe lands in data/raw/xjtu/_tools/.
 """
 

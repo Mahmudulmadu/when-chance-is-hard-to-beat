@@ -1,42 +1,42 @@
 # -*- coding: utf-8 -*-
-"""How many units does a RUL floor need? -- notebook 26.
+"""Per-unit safety of the RUL floor against the number of training units (notebook 26).
 
-Notebooks 22-25 priced how far this project's *attribution* numbers travel: an
+Notebooks 22-25 tested how far this project's attribution numbers hold: an
 exact permutation null (nb22), a unit-count power curve on each rig (nb23, nb24),
-and a reliability layer whose honest interval turned out to be [0 %, 100 %]
-(nb25). The one positive remaining-life result -- **RUL reported as a floor** -- has never
-been through any of it.
+and a reliability layer whose interval came out as [0 %, 100 %] (nb25). The one
+positive remaining-life result, RUL reported as a floor, has not been through
+any of these.
 
 Two standing open items ask for the same measurement. Notebook 16's is a RUL
-learning curve over units; notebook 17's is sharper, because it corrected its own
-headline: one global q0.10 floor is 91 % safe *on the median unit*, but only
-**6 of 11 units individually clear 90 % safety**, and Bearing2_4 -- the shortest
-life in the set -- is 18 % safe. A floor is a per-unit promise, so the number
-that decides whether *"at least n minutes"* can be said to an engineer is how
-that **fraction of units** moves with the size of the training fleet.
+learning curve over units. Notebook 17's is more specific, because it corrected
+its own main result: one global q0.10 floor is 91 % safe on the median unit, but
+only 6 of 11 units individually clear 90 % safety, and Bearing2_4, the shortest
+life in the set, is 18 % safe. A floor applies to each unit separately, so
+whether "at least n minutes" can be said to an engineer depends on how that
+fraction of units moves with the size of the training fleet.
 
 This measures it. For each training-set size n, draw subsets of the 15 bearings,
 fit notebook 16's forest on those units only, and score every held-out unit on
 the pair notebook 17 used:
 
-  * **safety** -- the share of that unit's post-alarm minutes where the floor
+  * safety: the share of that unit's post-alarm minutes where the floor
     does not overstate the life left (q <= y), and
-  * **give-up** -- the median (y - q) / y, how much of the remaining life the
-    floor hands back to buy that safety.
+  * give-up: the median (y - q) / y, how much of the remaining life the
+    floor gives up for that safety.
 
 Both controls from the standing rule run alongside, because safety alone is
-trivially purchasable -- a floor of zero minutes is 100 % safe and gives up
-everything, so the forest has to be beaten on the *pair*:
+trivial to reach: a floor of zero minutes is 100 % safe and gives up everything,
+so the forest has to beat the controls on the pair:
 
-  * **prior floor** -- the same quantile of the training units' post-alarm RUL
-    distribution, ignoring the features entirely. The physically incapable
-    control: it cannot know anything about the unit in front of it.
-  * **permuted** -- the same forest fitted after shuffling RUL across all
+  * prior floor: the same quantile of the training units' post-alarm RUL
+    distribution, ignoring the features entirely. This is the physically
+    incapable control: it cannot know anything about the unit in front of it.
+  * permuted: the same forest fitted after shuffling RUL across all
     training rows, destroying the feature-to-lifetime map. The null control.
 
-n=14 is exhaustive (15 subsets, one per omitted unit), so the curve's right-hand
-end reproduces notebook 17's leave-one-bearing-out numbers exactly rather than
-approximately, and that is the build's own correctness check.
+n=14 is exhaustive (15 subsets, one per omitted unit), so the right-hand end of
+the curve reproduces notebook 17's leave-one-bearing-out numbers exactly. This is
+the build's own correctness check.
 
 Usage:  python src/build_floor_curve.py
 Writes data/processed/floor_curve.csv
@@ -68,9 +68,9 @@ ENV = ["H_BPFO", "H_BPFI", "H_FR", "H_BPFO_h2", "H_BPFI_h2", "H_BSF", "H_FTF",
        "H_BPFI_sb1", "H_BPFO_sb1"]
 DETECT = ["H_RMS", "H_Kurt"]
 K, W = 20, 10
-# notebook 16's forest, unchanged -- 300 trees is what the quantile is cut from, and
-# a 60-tree check moved held-out safety by 0.000-0.010, so the cost is not worth the
-# defence of a smaller ensemble here (176 fits at ~6 s is ~18 min)
+# notebook 16's forest, unchanged: 300 trees is what the quantile is cut from, and
+# a 60-tree check moved held-out safety by 0.000-0.010, so the time saved does not justify
+# a smaller ensemble here (176 fits at ~6 s is ~18 min)
 RFR = dict(n_estimators=300, random_state=0, n_jobs=-1, min_samples_leaf=2)
 QS = np.array([0.02, 0.06, 0.10, 0.14, 0.20, 0.30, 0.40, 0.50])
 N_SUBSETS = 16                       # >= C(15,14) = 15, so n=14 is exhaustive

@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
-"""Shaft-synchronous (load-zone) envelope features for Paderborn -- notebook 21.
+"""Shaft-synchronous (load-zone) envelope features for Paderborn (notebook 21).
 
-Notebook 20 measured, on XJTU-SY, that race attribution is a **shaft-rate**
-question rather than a bearing-geometry one: seven dimensionless features from
-folding the envelope at shaft rate reached 90.0 % of snapshots and 11/11 units
-with no BPFO, BPFI, BSF or FTF. That claim rests on one rig and eleven units.
+Notebook 20 measured, on XJTU-SY, that race attribution works from the shaft rate
+without bearing geometry: seven dimensionless features from folding the envelope
+at shaft rate reached 90.0 % of snapshots and 11/11 units with no BPFO, BPFI, BSF
+or FTF. That claim rests on one rig and eleven units.
 
 Paderborn is the check: 25 bearings, artificial and real damage, a documented
 shaft speed recorded per run, and an established bearing-held-out protocol
-(notebook 05). Nothing new has to be measured -- only the existing recordings.
+(notebook 05). Nothing new has to be measured; the existing recordings are enough.
 
 Differences from the XJTU build that matter:
   - 64 kHz rather than 25.6 kHz, so the resonance band runs to 20 kHz
   - each 1.024 s window holds ~25 shaft revolutions against XJTU's ~51, so the
     synchronous average has about half the averaging gain
-  - the shaft rate is RECORDED per run, so the search is a refinement of a
+  - the shaft rate is recorded per run, so the search is a refinement of a
     measured value rather than of a nominal one
 
 Usage:  python src/build_loadzone_paderborn.py
@@ -51,7 +51,7 @@ def lz_features(x, f0):
     drift under an eighth of a revolution across the record.
 
     NOTE (notebook 20, finding 4): LZ_frdev is a pure speed reading and is not a
-    usable feature -- it proxies how stably the search locks and scored 81 % on
+    usable feature: it proxies how stably the search locks and scored 81 % on
     nothing at all. It is written out for diagnosis only; quarantine it.
     """
     e = np.abs(hilbert(sosfiltfilt(SOS, x)))

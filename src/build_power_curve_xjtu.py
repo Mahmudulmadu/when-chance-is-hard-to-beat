@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
-"""The unit-count power curve on XJTU-SY -- notebook 24.
+"""Unit-count power curve on XJTU-SY (notebook 24).
 
 Notebook 23 measured, on Paderborn, that an attribution claim needs about eight
-units. That is itself a single-rig claim, and notebooks 20 and 21 showed exactly
-how those fail: the load-zone channel cleared its null on XJTU-SY and vanished on
-Paderborn. So the eight-unit figure has to be checked on the second rig before it
-is quoted.
+units. That is itself a single-rig claim, and notebooks 20 and 21 showed how
+such claims fail: the load-zone channel cleared its null on XJTU-SY and vanished
+on Paderborn. So the eight-unit figure has to be checked on the second rig before
+it is quoted.
 
-Two things differ here and both matter:
+Two things differ here:
 
-  * **The effect is larger.** Notebook 22 put geometry at 94.1 % against a null
+  * The effect is larger. Notebook 22 put geometry at 94.1 % against a null
     centred at 59 % on XJTU-SY, against 85.5 % / 44 % on Paderborn. A larger
     effect should be detectable with fewer units, so the threshold may be lower.
-  * **The minority class is tiny.** XJTU-SY has 8 outer-race and only **3
-    inner-race** units. A subset needs at least two of each class, otherwise
-    leave-one-out leaves a single-class training set -- so every valid subset
-    reuses two or three of the *same three* inner-race bearings, and the curve's
-    points are far from independent.
+  * The minority class is tiny. XJTU-SY has 8 outer-race and only 3
+    inner-race units. A subset needs at least two of each class, otherwise
+    leave-one-out leaves a single-class training set. Every valid subset
+    therefore reuses two or three of the same three inner-race bearings, and the
+    curve's points are far from independent.
 
 Three channels are run so the curve carries controls rather than only positives.
 Notebook 22 established geometry and load-zone are both real here (p = 0.0061
@@ -26,11 +26,11 @@ and serves as the negative.
 Usage:  python src/build_power_curve_xjtu.py
 Writes data/processed/power_curve_xjtu.csv
 
-    CORRECTION (notebook 24): the null must EXCLUDE the true labelling. When the
+    Correction (notebook 24): the null must exclude the true labelling. When the
     true assignment is drawn into a sampled null, its score equals the true score,
     so p >= 1/N and the subset can never reach p < 0.05. That happens 71 % of the
     time on XJTU-SY at n=8 (k=2, C(8,2)=28 drawn 20) against 29 % on Paderborn,
-    so it biases against exactly the datasets with a small minority class. The
+    so it biases against the datasets with a small minority class. The
     null is now the non-true labellings and p uses the standard
     (1 + #{null >= true}) / (1 + N) form, whose floor is 1/21 = 0.048.
 """
@@ -52,7 +52,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "processed"
 # n_jobs=1 and 15 trees for the same reasons as the Paderborn curve: measured
 # 33 ms/fit against 48 with n_jobs=-1 and 227 with 100 trees. Both the true and
-# the null side use the same forest, so this costs precision, not comparability.
+# the null side use the same forest, so this lowers precision but keeps the two comparable.
 RF = dict(n_estimators=15, random_state=0, n_jobs=1)
 # Referee M3: see the note in build_power_curve.py. 30 subsets per size, and the
 # subset's null enumerated exactly wherever C(n,k)-1 <= 40.

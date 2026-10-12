@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
-"""The results registry -- notebook 29.
+"""Build the results registry, `results/registry.csv` (notebook 29).
 
-The paper's argument is that a number in this field is not evidence until it has
-been priced against something: a permuted-label null, a degenerate baseline, or
-chance. This applies that rule to the project's own numbers and writes them to
-one table, `results/registry.csv`, so every claim the paper makes can be read
-with its comparator beside it.
+The paper's argument is that a number in this field means little until it has
+been compared with something: a permuted-label null, a degenerate baseline, or
+chance. This script applies that rule to the project's own numbers and writes
+them to one table, `results/registry.csv`, so that every claim in the paper can
+be read with its comparator beside it.
 
 Two kinds of row, and the `source` column says which:
 
-  * **recomputed** -- the value is recomputed here from a cached result file, so
-    it cannot drift from the notebook that produced it. Most rows are these.
-  * **quoted (nbNN)** -- the value is typed from a notebook whose intermediate
+  * recomputed: the value is recomputed here from a cached result file, so it
+    cannot drift from the notebook that produced it. Most rows are of this kind.
+  * quoted (nbNN): the value is typed from a notebook whose intermediate
     results were never cached to CSV. These are listed so the paper does not
     silently mix the two, and each names the notebook to re-run.
 
@@ -144,8 +144,8 @@ add("nb17/26", "XJTU-SY", 15, "remaining-life floor, median per-unit safety (q0.
 # ---- how many units a claim needs (nb23/24). Referee M3: 12 subsets per size could not
 # support a point estimate, so the curves were recomputed at 30, with each subset's null
 # enumerated exactly wherever it is small enough. The detection rate now carries a
-# Clopper-Pearson interval -- optimistic, because the subsets share bearings heavily, which
-# the note quantifies.
+# Clopper-Pearson interval, which is optimistic because the subsets share bearings heavily;
+# the note quantifies this.
 def cp(k, n, conf=0.95):
     a = (1 - conf) / 2
     return (0.0 if k == 0 else beta.ppf(a, k, n - k + 1),
@@ -246,9 +246,9 @@ add("nb21", "Paderborn", 11, "race attribution, decoy fold at 1.37x shaft rate",
 
 def bh(R):
     """Referee M2. Benjamini-Hochberg across the attribution tests, which are one family:
-    the same question (does this channel carry the race?) asked of every channel, model and
-    rig. Reported beside the raw p rather than instead of it -- a corrected value answers a
-    different question, and both belong in the table. Rows outside the family get NaN."""
+    the same question (whether a channel carries the race) asked of every channel, model and
+    rig. Reported beside the raw p rather than instead of it, because a corrected value answers a
+    different question and both belong in the table. Rows outside the family get NaN."""
     fam = R.p.notna() & R.claim.str.startswith("race attribution")         & R.comparator.str.contains("null", na=False)
     q = R.loc[fam, "p"].sort_values()
     m = len(q)

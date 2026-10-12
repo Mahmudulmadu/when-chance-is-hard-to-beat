@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Raw vibration cache for the deep baseline -- notebook 28.
+"""Cache decimated raw vibration windows for the deep baseline (notebook 28).
 
 Every model in this project so far reads a feature table. The deep baseline
 reads the waveform, so it needs the waveform in a form that 1 815 + 5 082
@@ -14,12 +14,13 @@ either rig rather than a fraction of one:
     Paderborn  64.0 kHz / 4 -> 16.0 kHz   2 048 samples = 128 ms = 3.2 rev
 
 Decimation is an anti-aliased FIR, zero-phase. Nothing else is done to the
-signal here; per-crop standardisation is the model's business, not the cache's.
+signal here; per-crop standardisation is done in the model, not in the cache.
 
 What is cached:
 
-  * XJTU-SY: the 11 race units (OR/IR), horizontal channel, snapshots K..N-1 --
-    the same post-baseline rows notebook 22's `xjtu_matrices()` scores.
+  * XJTU-SY: the 11 race units (OR/IR), horizontal channel, snapshots K..N-1.
+    These are the same post-baseline rows that notebook 22's `xjtu_matrices()`
+    scores.
   * Paderborn: the 11 real damaged and 6 healthy bearings at N15_M07_F04, all 20
     runs each, `vibration_1` truncated to 245 760 samples as in notebooks 11-21.
     The healthy runs are for the bearing-identity (fingerprint) test.

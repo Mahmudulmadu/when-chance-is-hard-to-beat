@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
-"""The exact null for the XJTU-SY non-geometry channel -- notebooks 18/24.
+"""Exact null for the XJTU-SY non-geometry channel (notebooks 18/24).
 
-Table 1's non-geometry row was priced by the study-size curve (notebook 24),
-whose n=11 point draws **20** of the 164 non-true labellings. The other rows on
-that rig are exact over all 165. A paper whose abstract says its p-values are
-exact rather than sampled cannot leave that row sampled, so this enumerates it.
+Table 1's non-geometry row came from the study-size curve (notebook 24), whose
+n=11 point draws 20 of the 164 non-true labellings. The other rows on that rig
+are exact over all 165. The paper's abstract says its p-values are exact rather
+than sampled, so that row cannot stay sampled; this script enumerates it.
 
 Everything except the number of labellings is held at the curve's own settings,
 because the true accuracy (62.3 %) is the curve's and must not move:
 
-  * the curve's `load()` -- alarm-anchored windows, per-unit median subtraction;
+  * the curve's `load()`: alarm-anchored windows, per-unit median subtraction;
   * the curve's 15-tree forest, n_jobs=1, random_state=0;
   * the curve's leave-one-bearing-out scoring.
 
-All three channels are enumerated, not only the negative one: geometry and
+All three channels are enumerated, not only the negative one. Geometry and
 load-zone are already exact under notebook 22's 100-tree forest, so scoring them
-again here says whether the verdicts survive the change of forest.
+again here shows whether their results survive the change of forest.
 
 p is the exact form of section 4.2, #{a(L) >= a(true)} / 165, which for a
 complete enumeration equals the curve's (1 + #{null >= true}) / (1 + N).

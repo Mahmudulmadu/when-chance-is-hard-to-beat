@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Selection-aware exact null for the Paderborn geometry result -- paper section 4.2.
+"""Selection-aware exact null for the Paderborn geometry result (paper section 4.2).
 
 The exact null in `build_permutation_nulls.py` holds the Paderborn configuration
 fixed: the 400 N condition (N15_M07_F04) and the carriers + sidebands feature set.
-Both were chosen in notebook 11, which compared twelve configurations -- six feature
-sets at each of two radial forces -- on the same eleven real-damage bearings the
+Both were chosen in notebook 11, which compared twelve configurations (six feature
+sets at each of two radial forces) on the same eleven real-damage bearings the
 null is computed on, using their race labels. A null that holds the winner fixed
-does not pay for that choice.
+does not account for that choice.
 
 This one repeats the choice under every labelling. For each of the 462
 class-preserving labellings of the eleven real units it scores all twelve

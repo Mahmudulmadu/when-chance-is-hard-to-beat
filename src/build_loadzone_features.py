@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Shaft-synchronous (load-zone) envelope features for XJTU-SY -- notebook 20.
+"""Shaft-synchronous (load-zone) envelope features for XJTU-SY (notebook 20).
 
 An inner-race defect rotates with the shaft and passes through the loaded arc
 once per revolution, so its impulses are amplitude-modulated at 1x shaft rate and
@@ -8,7 +8,7 @@ load direction, is not. Folding the envelope onto one shaft revolution and
 averaging over the ~45-51 revolutions in a snapshot reinforces what is
 phase-locked and averages out what is not.
 
-These features use the SHAFT RATE but no bearing geometry -- no BPFO, BPFI, BSF
+These features use the shaft rate but no bearing geometry: no BPFO, BPFI, BSF
 or FTF, and nothing derived from pitch diameter, ball diameter or ball count.
 
 CAUTION (notebook 20, finding 4): LZ_frdev is a pure speed reading and acts as a
@@ -49,10 +49,10 @@ FAULT = {"Bearing1_1": "OR", "Bearing1_2": "OR", "Bearing1_3": "OR",
 def lz_features(x, f0):
     """Shaft-synchronous envelope features, with fr found by search.
 
-    The FFT bin spacing (0.78 Hz) is far too coarse to fold on -- at 40 Hz it
-    drifts a full revolution over the record -- so fr is chosen as the value
-    that maximises the synchronous energy, on a grid fine enough to hold drift
-    under an eighth of a revolution.
+    The FFT bin spacing (0.78 Hz) is too coarse to fold on: at 40 Hz it drifts a
+    full revolution over the record. fr is therefore chosen as the value that
+    maximises the synchronous energy, on a grid fine enough to hold drift under
+    an eighth of a revolution.
     """
     e = np.abs(hilbert(sosfiltfilt(SOS, x)))
     e = e - e.mean()

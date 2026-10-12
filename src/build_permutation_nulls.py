@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-"""Exact bearing-level label-permutation nulls for stage-2 attribution -- notebook 22.
+"""Exact bearing-level label-permutation nulls for stage-2 attribution (notebook 22).
 
 Every attribution number in this project is a bearing-held-out accuracy over
 about eleven units. Notebook 20 showed that a feature which cannot possibly work
 (`LZ_frdev`, a speed reading) scored 81 %, and notebook 21 showed that both
 feature families fingerprint individual healthy bearings at ~90 % against 16.7 %
-chance. Neither observation says how much of a *class* result is real.
+chance. Neither observation says how much of a class result is real.
 
-This does. Reassign the OR/IR labels across the bearings in every distinct way
-that preserves the class counts, re-run the same bearing-held-out protocol on
-each, and compare the true labelling against that null. The number of
+This script does that. We reassign the OR/IR labels across the bearings in every
+distinct way that preserves the class counts, re-run the same bearing-held-out
+protocol on each, and compare the true labelling against that null. The number of
 assignments is small enough to enumerate exactly:
 
     XJTU-SY   11 race units, 8 OR / 3 IR  ->  C(11,3) = 165

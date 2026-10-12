@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""Order-domain envelope spectra for the spectrum-CNN probe -- notebook 28.
+"""Cache order-domain envelope spectra for the spectrum-CNN probe (notebook 28).
 
-The raw-waveform WDCNN reads bearing identity and operating point, not race.
-The obvious objection is that a waveform at three shaft speeds is the wrong
-representation, and that a network given what the forest is given -- the
-envelope spectrum on a shaft-order axis -- would find the race. This caches
-that representation so the objection can be tested rather than argued.
+The raw-waveform WDCNN picks up bearing identity and operating point but not
+race. The obvious objection is that a waveform at three shaft speeds is the wrong
+representation, and that a network given what the forest is given (the envelope
+spectrum on a shaft-order axis) would find the race. This script caches that
+representation so that the objection can be tested.
 
 The spectrum is computed exactly as the feature builders compute it (notebook
 13 for XJTU-SY, notebook 11 for Paderborn): band-pass to the resonance band,
@@ -111,7 +111,7 @@ def build_xjtu():
 def build_xjtu_baseline():
     """Each race unit's healthy reference: the per-bin median of its first K order
     spectra (files 1..K), in dB. Subtracting it is what nb22's `xjtu_matrices()`
-    does to the forest's geometry features -- nb13's per-unit calibration."""
+    does to the forest's geometry features (nb13's per-unit calibration)."""
     fr_of = xjtu_speeds()
     race = [b for b in sorted(FAULT) if FAULT[b] in ("OR", "IR")]
     B = np.stack([np.median(np.stack([xjtu_order_row(b, s, fr_of) for s in range(K)]), axis=0)
