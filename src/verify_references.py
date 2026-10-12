@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Check every reference in paper/paper-a.md against its authoritative record.
+"""Check every reference in paper/manuscript.md against its authoritative record.
 
 Same rule as results/registry.csv: nothing is trusted because it is written
 down. Each entry is fetched from Crossref (by DOI, or by title where the
@@ -7,12 +7,12 @@ publisher deposits none) or from the arXiv API, and title, first author, year,
 volume and pages are compared field by field against what the paper prints.
 
 Six entries are not in Crossref and cannot be checked this way. Each is listed
-in KNOWN below with the record it *was* checked against, so that a re-run
+in KNOWN below with the record it was checked against, so that a re-run
 distinguishes "verified elsewhere" from "not verified".
 
     python src/verify_references.py            # exits non-zero on any new problem
 
-Last full pass: 2026-10-04 (47 entries). Result: 41 checked automatically, 6 by
+Last full pass: 2026-10-12 (47 entries). Result: 41 checked automatically, 6 by
 the routes in KNOWN, 0 outstanding.
 """
 import json
@@ -26,8 +26,8 @@ import urllib.request
 import xml.etree.ElementTree as ET
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-PAPER = ROOT / "paper" / "paper-a.md"
-UA = {"User-Agent": "paper-a-ref-check/1.0 (mailto:mahmudulmadu@gmail.com)"}
+PAPER = ROOT / "paper" / "manuscript.md"
+UA = {"User-Agent": "reference-check/1.0 (mailto:mahmudulmadu@gmail.com)"}
 
 # Entries Crossref does not index, or indexes under a different record.
 # The value is how the entry was verified instead.
