@@ -5,6 +5,7 @@ Code, notebooks and results for the paper
 > When chance is hard to beat: exact permutation nulls and degenerate baselines for bearing fault diagnosis and remaining useful life
 >
 > Md. Mahmudul Hasan, Independent Researcher, Dhaka, Bangladesh
+> ORCID: [0009-0001-0778-064X](https://orcid.org/0009-0001-0778-064X)
 
 The paper is [`paper/when-chance-is-hard-to-beat.pdf`](paper/when-chance-is-hard-to-beat.pdf). The same text is in Markdown in [`paper/manuscript.md`](paper/manuscript.md).
 
